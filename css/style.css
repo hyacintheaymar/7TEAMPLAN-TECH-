@@ -1,0 +1,739 @@
+:root {
+    --teams-primary: #464EB8;
+    --teams-secondary: #6264A7;
+    --teams-accent: #7B83EB;
+    --teams-dark: #201F2E;
+    --teams-light: #F3F2F1;
+    --teams-bg: #F5F5F7;
+    --teams-text: #252423;
+    --teams-text-light: #FFFFFF;
+    --teams-hover: rgba(123, 131, 235, 0.1);
+    --teams-active: rgba(123, 131, 235, 0.2);
+    --teams-border: rgba(123, 131, 235, 0.3);
+    --transition-speed: 0.3s;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+    background-color: var(--teams-bg);
+    color: var(--teams-text);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
+/* === MODE SOMBRE PERSISTANT === */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+body.dark-mode .teams-toolbar,
+body.dark-mode .employee-panel,
+body.dark-mode .view,
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .settings-container,
+body.dark-mode .member-select-item,
+body.dark-mode .team-form,
+body.dark-mode .employee-form {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #444;
+}
+body.dark-mode .day-header,
+body.dark-mode .day-cell,
+body.dark-mode .employee-card,
+body.dark-mode .team-card,
+body.dark-mode .form-group label,
+body.dark-mode .setting-item label {
+    background-color: #333;
+    color: #e0e0e0;
+}
+body.dark-mode .time-label,
+body.dark-mode .day-name,
+body.dark-mode .employee-name,
+body.dark-mode .panel-title,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #7B83EB;
+}
+body.dark-mode .close-panel:hover {
+    color: #7B83EB;
+}
+body.dark-mode .nav-button {
+    border-color: #555;
+}
+body.dark-mode .nav-button:hover {
+    background-color: rgba(123, 131, 235, 0.1);
+}
+/* Barre de navigation */
+.teams-nav {
+    width: 72px;
+    background-color: var(--teams-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    transition: width 0.3s ease;
+    z-index: 100;
+}
+.teams-nav:hover {
+    width: 240px;
+    align-items: flex-start;
+    padding: 16px;
+}
+.teams-nav:hover .nav-text {
+    display: inline-block;
+    margin-left: 12px;
+}
+.nav-logo {
+    color: var(--teams-text-light);
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+}
+.nav-logo i {
+    font-size: 28px;
+    min-width: 40px;
+}
+.nav-logo span {
+    font-size: 20px;
+    font-weight: 600;
+    display: none;
+}
+.nav-items {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.nav-btn {
+    display: flex;
+    align-items: center;
+    color: var(--teams-text-light);
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+}
+.nav-btn:hover {
+    background-color: var(--teams-hover);
+    transform: translateX(5px);
+}
+.nav-btn.active {
+    background-color: var(--teams-primary);
+}
+.nav-btn i {
+    font-size: 20px;
+    min-width: 40px;
+}
+.nav-text {
+    font-size: 16px;
+    display: none;
+}
+/* Contenu principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 100vh;
+    position: relative;
+}
+/* Arrière-plan du calendrier */
+.calendar-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.05;
+    pointer-events: none;
+    filter: blur(8px);
+    background-image: url("image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237B83EB' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.view {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+.view.active-view {
+    display: block;
+}
+/* Barre d'outils */
+.teams-toolbar {
+    background-color: white;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 50;
+}
+.week-navigation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.nav-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid var(--teams-border);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.nav-button:hover {
+    background-color: var(--teams-hover);
+    transform: scale(1.05);
+}
+#current-week {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--teams-primary);
+}
+.view-actions {
+    display: flex;
+    gap: 12px;
+}
+.teams-btn {
+    background-color: var(--teams-primary);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all var(--transition-speed) ease;
+}
+.teams-btn:hover {
+    background-color: var(--teams-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(123, 131, 235, 0.3);
+}
+.color-toggle {
+    display: flex;
+    background-color: white;
+    border: 1px solid var(--teams-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.toggle-btn.active {
+    background-color: var(--teams-primary);
+    color: white;
+}
+.toggle-btn:hover:not(.active) {
+    background-color: var(--teams-hover);
+}
+/* Contenu du calendrier */
+.calendar-container {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+}
+.calendar-header {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    background-color: var(--teams-bg);
+    z-index: 10;
+    padding-bottom: 12px;
+}
+.time-label {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--teams-primary);
+}
+.day-header {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.day-name {
+    font-size: 14px;
+    color: var(--teams-secondary);
+}
+.day-date {
+    font-size: 16px;
+    color: var(--teams-text);
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    grid-auto-rows: 80px;
+    gap: 8px;
+}
+.time-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teams-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    border-top: 1px dashed var(--teams-border);
+}
+.day-cell {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: all 0.2s ease;
+}
+.day-cell:hover {
+    box-shadow: 0 4px 8px rgba(123, 131, 235, 0.2);
+}
+.assignment-card {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    border-radius: 6px;
+    padding: 12px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid var(--team-color, var(--teams-primary));
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    z-index: 5;
+    opacity: 1;
+}
+.assignment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+.team-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--teams-text);
+}
+.assignment-time {
+    font-size: 14px;
+    color: var(--teams-secondary);
+    margin-bottom: 12px;
+}
+.team-members {
+    display: flex;
+    gap: 6px;
+}
+.member-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--teams-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    font-weight: 600;
+}
+/* Panneau des employés */
+.employee-panel {
+    width: 300px;
+    background-color: white;
+    border-left: 1px solid var(--teams-border);
+    padding: 24px;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.05);
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.panel-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--teams-primary);
+}
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--teams-secondary);
+    transition: all var(--transition-speed) ease;
+}
+.close-panel:hover {
+    color: var(--teams-primary);
+    transform: rotate(90deg);
+}
+.employee-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.employee-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-speed) ease;
+    cursor: grab;
+}
+.employee-card:hover {
+    background-color: var(--teams-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+.employee-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--teams-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    font-weight: 600;
+    margin-right: 16px;
+}
+.employee-info {
+    flex: 1;
+}
+.employee-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.employee-dept {
+    font-size: 14px;
+    color: var(--teams-secondary);
+}
+/* Gestion des employés */
+.employee-management {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.employee-form {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.employee-list-container {
+    flex: 2;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+/* Gestion des équipes */
+.team-management {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.team-form {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.team-list-container {
+    flex: 2;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.members-select {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+}
+.member-select-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+.member-select-item:last-child {
+    border-bottom: none;
+}
+.member-select-item input {
+    margin-right: 10px;
+}
+/* Paramètres */
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.settings-group {
+    margin-bottom: 30px;
+}
+.settings-group h3 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    color: var(--teams-primary);
+}
+.setting-item {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.setting-item label {
+    margin-left: 10px;
+    font-size: 16px;
+}
+.setting-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+.setting-item input[type="time"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+.department-list {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.dept-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: #f0f0f0;
+    border-radius: 16px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+.dept-chip .color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dept-chip .delete-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ff4d4d;
+}
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(123, 131, 235, 0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(123, 131, 235, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(123, 131, 235, 0); }
+}
+.new-item {
+    animation: fadeIn 0.3s ease-out;
+}
+.pulse-effect {
+    animation: pulse 0.5s ease;
+}
+/* Responsive */
+@media (max-width: 1200px) {
+    .employee-panel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(100%);
+    }
+    .employee-panel.open {
+        transform: translateX(0);
+    }
+    .employee-management,
+    .team-management {
+        flex-direction: column;
+    }
+}
+@media (max-width: 768px) {
+    .teams-toolbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+    .week-navigation {
+        width: 100%;
+        justify-content: center;
+    }
+    .view-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    .calendar-header {
+        grid-template-columns: 50px repeat(7, 1fr);
+    }
+    .time-label {
+        font-size: 12px;
+    }
+    .day-name {
+        font-size: 11px;
+    }
+    .day-date {
+        font-size: 14px;
+    }
+}
+
+/* === MODAL D'AFFECTATION === */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(123, 131, 235, 0.3);
+}
+.modal-header h3 {
+    margin: 0;
+    color: var(--teams-primary);
+}
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--teams-secondary);
+    transition: all var(--transition-speed) ease;
+}
+.close-modal:hover {
+    color: var(--teams-primary);
+}
+.modal-body {
+    padding: 1.5rem;
+}
+.form-group-modal {
+    margin-bottom: 1rem;
+}
+.form-group-modal label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--teams-text);
+}
+.days-select {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+.days-select label {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid var(--teams-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.days-select label:hover {
+    background-color: var(--teams-hover);
+}
+.days-select input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+.modal-actions .teams-btn {
+    padding: 0.75rem 1.5rem;
+}
+.modal-actions .teams-btn.secondary {
+    background-color: #f0f0f0;
+    color: var(--teams-text);
+}
+.modal-actions .teams-btn.secondary:hover {
+    background-color: #e0e0e0;
+}
